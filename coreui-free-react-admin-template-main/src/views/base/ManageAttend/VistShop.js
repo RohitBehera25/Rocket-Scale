@@ -1,18 +1,25 @@
 import React, { useState } from 'react'
-import { CCard, CCardHeader, CCardBody } from '@coreui/react'
 import {
-  Grid,
-  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
   IconButton,
+  Typography,
+  Collapse,
   Button,
-  MenuItem,
-  Select,
   Dialog,
   DialogContent,
+  Select,
+  MenuItem,
   TextField,
 } from '@mui/material'
 import { RiEdit2Fill } from 'react-icons/ri'
 import { AiFillDelete } from 'react-icons/ai'
+import { IoCalendarClearOutline } from 'react-icons/io5'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import girl1 from './Images/girl-1.jpg'
 import girls3 from './Images/girls-3.jpg'
@@ -20,7 +27,6 @@ import girls5 from './Images/girls-5.jpg'
 import mens1 from './Images/mens-1.jpg'
 import mens2 from './Images/mens-2.jpg'
 import mens4 from './Images/mens-4.jpg'
-import { IoCalendarClearOutline } from 'react-icons/io5'
 
 const data = [
   { id: 101, name: 'John', mobile: '123-456-7890', image: girl1, totalAssignShop: 10 },
@@ -33,12 +39,23 @@ const data = [
 
 const Accordion = () => {
   const [attendanceData, setAttendanceData] = useState(data)
+  const [expandedRows, setExpandedRows] = useState([])
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
   const [selectedImage, setSelectedImage] = useState(null)
   const [open, setOpen] = useState(false)
 
-  // Function to handle image click (for zoom)
+  // Handle row click to expand/collapse
+  const handleRowClick = (id) => {
+    const isExpanded = expandedRows.includes(id)
+    if (isExpanded) {
+      setExpandedRows(expandedRows.filter((rowId) => rowId !== id))
+    } else {
+      setExpandedRows([...expandedRows, id])
+    }
+  }
+
+  // Function to handle image click
   const handleImageClick = (image) => {
     setSelectedImage(image)
     setOpen(true)
@@ -89,122 +106,160 @@ const Accordion = () => {
 
   return (
     <div>
-      <CCardHeader>
-        <strong>Visit Shop</strong>
-      </CCardHeader>
-      {attendanceData.map((item, index) => (
-        <CCard key={index} style={{ marginBottom: '10px', background: 'rgba(255, 255, 255, 0.5)' }}>
-          <CCardBody>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={2}>
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '50%',
-                    display: 'block',
-                    margin: '0 auto',
-                    backdropFilter: 'blur(10px)',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleImageClick(item.image)} // Handle image click
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  ID: {item.id}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  Name: {item.name}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  {item.mobile}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  Total Shop Visit: {item.totalAssignShop}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Select
-                  value={item.selectedOption || 'Today'}
-                  onChange={(e) => handleDropdownChange(item.id, e.target.value)}
-                  fullWidth
-                  displayEmpty
-                >
-                  <MenuItem value="Today">Today</MenuItem>
-                  <MenuItem value="Yesterday">Yesterday</MenuItem>
-                  <MenuItem value="Tomorrow">Tomorrow</MenuItem>
-                  <MenuItem value="Choose from Calendar">
-                    Choose from Calendar <IoCalendarClearOutline />
-                  </MenuItem>
-                </Select>
-              </Grid>
+      <Typography variant="h6" gutterBottom>
+        Visit Shop
+      </Typography>
+      <TableContainer
+        component={Paper}
+        style={{ backgroundColor: '#212631', borderRadius: '10px' }}
+      >
+        <Table>
+          <TableHead style={{ backgroundColor: '#2a303d' }}>
+            <TableRow>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Image
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                ID
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Name
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Mobile No
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Total Shop Visit
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Option
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Progress
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Actions
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {attendanceData.map((item) => (
+              <React.Fragment key={item.id}>
+                <TableRow onClick={() => handleRowClick(item.id)}>
+                  <TableCell align="center">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => handleImageClick(item.image)}
+                    />
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.id}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.name}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.mobile}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.totalAssignShop}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Select
+                      style={{ color: 'wheat', width: '150px' }}
+                      value={item.selectedOption || 'Today'}
+                      onChange={(e) => handleDropdownChange(item.id, e.target.value)}
+                      fullWidth
+                      displayEmpty
+                    >
+                      <MenuItem value="Today">Today</MenuItem>
+                      <MenuItem value="Yesterday">Yesterday</MenuItem>
+                      <MenuItem value="Tomorrow">Tomorrow</MenuItem>
+                      <MenuItem value="Choose from Calendar">
+                        Choose from Calendar <IoCalendarClearOutline />
+                      </MenuItem>
+                    </Select>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: 'rgba(253, 227, 167)',
+                        color: 'black',
+                        marginRight: '10px',
+                      }}
+                    >
+                      View Progress
+                    </Button>
+                  </TableCell>
+                  <TableCell align="center">
+                    <div
+                      style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                    >
+                      <IconButton aria-label="edit" style={{ marginRight: '10px' }}>
+                        <RiEdit2Fill style={{ fontSize: '25px', color: 'wheat' }} />
+                      </IconButton>
+                      <IconButton aria-label="delete">
+                        <AiFillDelete style={{ fontSize: '25px', color: 'wheat' }} />
+                      </IconButton>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={8} style={{ paddingBottom: 0, paddingTop: 0 }}>
+                    <Collapse in={expandedRows.includes(item.id)} timeout="auto" unmountOnExit>
+                      <div
+                        style={{
+                          backgroundColor: '#2a303d',
+                          padding: '10px',
+                          borderRadius: '10px',
+                          margin: '10px 0',
+                        }}
+                      >
+                        <Typography variant="body2" style={{ color: 'wheat' }}>
+                          {/* Additional details can be added here if needed */}
+                        </Typography>
+                      </div>
+                    </Collapse>
+                  </TableCell>
+                </TableRow>
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-              <Grid item xs={2} container alignItems="center" justifyContent="center">
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: 'rgba(253, 227, 167);, 1',
-                    color: 'black', // Setting the background color
-                    '&:hover': {
-                      backgroundColor: 'rgba(242, 120, 75, 0.7)', // Optional: Darken on hover
-                    },
-                  }}
-                >
-                  View Progress
-                </Button>
-              </Grid>
-              <Grid
-                item
-                xs={10}
-                container
-                alignItems="center"
-                justifyContent="flex-end"
-                spacing={1}
-              >
-                <IconButton aria-label="edit">
-                  <RiEdit2Fill style={{ fontSize: '25px' }} />
-                </IconButton>
-                <IconButton aria-label="delete">
-                  <AiFillDelete style={{ fontSize: '25px' }} />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </CCardBody>
-        </CCard>
-      ))}
-
-      {/* Image Zoom Modal */}
+      {/* Modal for zoomed image */}
       <Dialog
         open={open}
         onClose={handleClose}
         PaperProps={{
           style: {
-            overflow: 'hidden', // Prevent scroll
-            borderRadius: '50%', // Ensure dialog itself is round
-            maxWidth: 'none', // No fixed size for dialog
+            overflow: 'hidden',
+            borderRadius: '50%',
+            maxWidth: 'none',
           },
         }}
       >
-        <DialogContent>
-          <img
-            src={selectedImage}
-            alt="Zoomed Image"
-            style={{
-              borderRadius: '50%',
-              width: '400px', // Set width for zoomed image
-              height: '400px', // Set height for zoomed image
-            }}
-            onClick={handleClose} // Close modal on image click
-          />
+        <DialogContent style={{ padding: 0 }}>
+          {selectedImage && (
+            <img
+              src={selectedImage}
+              alt="Zoomed"
+              style={{
+                width: '500px',
+                height: '500px',
+                borderRadius: '50%',
+              }}
+            />
+          )}
         </DialogContent>
       </Dialog>
 

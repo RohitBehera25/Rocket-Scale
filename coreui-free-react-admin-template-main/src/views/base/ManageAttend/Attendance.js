@@ -1,14 +1,25 @@
 import React, { useState } from 'react'
-import { CCard, CCardHeader, CCardBody } from '@coreui/react'
-import { Grid, Typography, IconButton, Dialog, DialogContent } from '@mui/material'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Dialog,
+  DialogContent,
+  Typography,
+} from '@mui/material'
+import { RiEdit2Fill } from 'react-icons/ri'
+import { AiFillDelete } from 'react-icons/ai'
 import girl1 from './Images/girl-1.jpg'
 import girls3 from './Images/girls-3.jpg'
 import girls5 from './Images/girls-5.jpg'
 import mens1 from './Images/mens-1.jpg'
 import mens2 from './Images/mens-2.jpg'
 import mens4 from './Images/mens-4.jpg'
-import { RiEdit2Fill } from 'react-icons/ri'
-import { AiFillDelete } from 'react-icons/ai'
 
 const data = [
   { id: 101, name: 'John', mobile: '123-456-7890', status: 'Present', image: girl1 },
@@ -18,6 +29,10 @@ const data = [
   { id: 105, name: 'Kavin', mobile: '123-456-7449', status: 'Absent', image: mens4 },
   { id: 106, name: 'Olive', mobile: '123-456-7449', status: 'Present', image: girls5 },
 ]
+
+const getStatusColor = (status) => {
+  return status === 'Present' ? 'green' : 'red'
+}
 
 const Accordion = () => {
   const [open, setOpen] = useState(false)
@@ -37,71 +52,87 @@ const Accordion = () => {
 
   return (
     <div>
-      <CCardHeader>
-        <strong>Attendance</strong>
-      </CCardHeader>
-      {data.map((item, index) => (
-        <CCard key={index} style={{ marginBottom: '10px', background: 'rgba(255, 255, 255, 0.5)' }}>
-          <CCardBody>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={2}>
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '50%',
-                    display: 'block',
-                    margin: '0 auto',
-                    cursor: 'pointer', // Pointer cursor to indicate clickability
-                  }}
-                  onClick={() => handleImageClick(item.image)} // On image click
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  ID: {item.id}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  Name: {item.name}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
+      <Typography variant="h6" gutterBottom>
+        Attendance Table
+      </Typography>
+      <TableContainer
+        component={Paper}
+        style={{ backgroundColor: '#212631', borderRadius: '10px' }}
+      >
+        <Table>
+          <TableHead style={{ backgroundColor: '#2a303d' }}>
+            <TableRow>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Image
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                ID
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Name
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Mobile No
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Status
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Actions
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell align="center">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    style={{
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '50%',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => handleImageClick(item.image)}
+                  />
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.id}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.name}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
                   {item.mobile}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography
-                  variant="body1"
-                  style={{
-                    backgroundColor: item.status === 'Present' ? 'green' : 'red', // Conditional background color for text
-                    color: 'white',
-                    padding: '4px',
-                    borderRadius: '4px',
-                    marginLeft: '10px',
-                    textAlign: 'center',
-                    width: '70px',
-                  }}
-                >
-                  {item.status}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <IconButton aria-label="edit">
-                  <RiEdit2Fill style={{ fontSize: '25px' }} />
-                </IconButton>
-                <IconButton aria-label="delete">
-                  <AiFillDelete style={{ fontSize: '25px' }} />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </CCardBody>
-        </CCard>
-      ))}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  <Typography
+                    style={{
+                      backgroundColor: getStatusColor(item.status),
+                      color: 'white',
+                      padding: '4px 10px',
+                      borderRadius: '10px',
+                      display: 'inline-block',
+                    }}
+                  >
+                    {item.status}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton aria-label="edit">
+                    <RiEdit2Fill style={{ fontSize: '25px', color: 'wheat' }} />
+                  </IconButton>
+                  <IconButton aria-label="delete">
+                    <AiFillDelete style={{ fontSize: '25px', color: 'wheat' }} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {/* Modal for zoomed image */}
       <Dialog
@@ -109,9 +140,9 @@ const Accordion = () => {
         onClose={handleClose}
         PaperProps={{
           style: {
-            overflow: 'hidden', // Prevent scroll
-            borderRadius: '50%', // Ensure dialog itself is round
-            maxWidth: 'none', // No fixed size for dialog
+            overflow: 'hidden',
+            borderRadius: '50%',
+            maxWidth: 'none',
           },
         }}
       >
@@ -121,9 +152,9 @@ const Accordion = () => {
               src={selectedImage}
               alt="Zoomed"
               style={{
-                width: '500px', // Set width for zoomed image
-                height: '500px', // Set height for zoomed image
-                borderRadius: '50%', // Make the image round
+                width: '500px',
+                height: '500px',
+                borderRadius: '50%',
               }}
             />
           )}

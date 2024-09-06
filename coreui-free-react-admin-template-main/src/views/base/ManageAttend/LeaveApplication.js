@@ -1,22 +1,27 @@
 import React, { useState } from 'react'
-import { CCard, CCardHeader, CCardBody } from '@coreui/react'
 import {
-  Grid,
-  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
   IconButton,
+  Typography,
+  Collapse,
+  Button,
   Dialog,
   DialogContent,
-  Button,
-  TextField,
 } from '@mui/material'
+import { RiEdit2Fill } from 'react-icons/ri'
+import { AiFillDelete } from 'react-icons/ai'
 import girl1 from './Images/girl-1.jpg'
 import girls3 from './Images/girls-3.jpg'
 import girls5 from './Images/girls-5.jpg'
 import mens1 from './Images/mens-1.jpg'
 import mens2 from './Images/mens-2.jpg'
 import mens4 from './Images/mens-4.jpg'
-import { RiEdit2Fill } from 'react-icons/ri'
-import { AiFillDelete } from 'react-icons/ai'
 
 const data = [
   {
@@ -81,10 +86,27 @@ const data = [
   },
 ]
 
-const Accordion = () => {
+// Function to get approval status color
+const getApprovalColor = (approved) => {
+  if (approved === true) return 'green'
+  if (approved === false) return 'red'
+  return 'orange'
+}
+
+const AccordionTable = () => {
+  const [expandedRows, setExpandedRows] = useState([])
   const [open, setOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
-  const [attendanceData, setAttendanceData] = useState(data)
+
+  // Handle row click to expand/collapse
+  const handleRowClick = (id) => {
+    const isExpanded = expandedRows.includes(id)
+    if (isExpanded) {
+      setExpandedRows(expandedRows.filter((rowId) => rowId !== id))
+    } else {
+      setExpandedRows([...expandedRows, id])
+    }
+  }
 
   // Function to handle image click
   const handleImageClick = (image) => {
@@ -98,126 +120,131 @@ const Accordion = () => {
     setSelectedImage(null)
   }
 
-  // Handle approve/reject click
-  const handleApprovalClick = (id, status) => {
-    const updatedData = attendanceData.map((item) => {
-      if (item.id === id) {
-        return { ...item, approved: status }
-      }
-      return item
-    })
-    setAttendanceData(updatedData)
-  }
-
   return (
     <div>
-      <CCardHeader>
-        <strong>Attendance</strong>
-      </CCardHeader>
-      {attendanceData.map((item, index) => (
-        <CCard key={index} style={{ marginBottom: '10px', background: 'rgba(255, 255, 255, 0.5)' }}>
-          <CCardBody>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={2}>
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '50%',
-                    display: 'block',
-                    margin: '0 auto',
-                    cursor: 'pointer', // Pointer cursor to indicate clickability
-                  }}
-                  onClick={() => handleImageClick(item.image)} // On image click
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  ID: {item.id}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography variant="body1" color="textPrimary">
-                  Name: {item.name}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography
-                  variant="body1"
-                  color="textPrimary"
-                  style={{ marginLeft: '5px', gap: '0' }}
-                >
-                  {item.mobile}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography
-                  variant="body1"
-                  color="textPrimary"
-                  style={{ marginLeft: '5px', width: '250px' }}
-                >
-                  To Till: {item.toTill}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography
-                  variant="body1"
-                  color="textPrimary"
-                  style={{ marginLeft: '50px', width: '250px' }}
-                >
-                  Total Days: {item.totalDays}
-                </Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  label="Description"
-                  variant="outlined"
-                  value={item.description}
-                  fullWidth
-                  multiline
-                  disabled
-                  style={{ marginLeft: '70px', width: '120%' }}
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  variant="contained"
-                  style={{
-                    backgroundColor: 'green',
-                    color: 'white',
-                    boxShadow: '0 0 10px green',
-                    marginLeft: '200%',
-                  }}
-                  onClick={() => handleApprovalClick(item.id, true)}
-                >
-                  Approved
-                </Button>
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  // variant="contained"
-                  style={{
-                    backgroundColor: 'red',
-                    color: 'white',
-                    marginLeft: '160%',
-                    boxShadow: '0 0 10px red',
-                  }}
-                  onClick={() => handleApprovalClick(item.id, false)}
-                >
-                  Rejected
-                </Button>
-              </Grid>
-              <Grid item xs={2}>
-                <IconButton aria-label="edit">
-                  <RiEdit2Fill style={{ fontSize: '25px', marginLeft: '280px' }} />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </CCardBody>
-        </CCard>
-      ))}
+      <Typography variant="h6" gutterBottom>
+        Attendance Table
+      </Typography>
+      <TableContainer
+        component={Paper}
+        style={{ backgroundColor: '#212631', borderRadius: '10px' }}
+      >
+        <Table>
+          <TableHead style={{ backgroundColor: '#2a303d' }}>
+            <TableRow>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Image
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                ID
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Name
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Mobile No
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                To Till
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Total Days
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Status
+              </TableCell>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
+                Actions
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((item, index) => (
+              <React.Fragment key={index}>
+                <TableRow>
+                  <TableCell align="center">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => handleImageClick(item.image)}
+                    />
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.id}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.name}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.mobile}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.toTill}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: 'wheat' }}>
+                    {item.totalDays}
+                  </TableCell>
+                  <TableCell align="center" style={{ color: getApprovalColor(item.approved) }}>
+                    {item.approved === true
+                      ? 'Approved'
+                      : item.approved === false
+                        ? 'Rejected'
+                        : 'Pending'}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: 'green',
+                        color: 'white',
+                        marginRight: '10px',
+                      }}
+                    >
+                      Present
+                    </Button>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: 'red',
+                        color: 'white',
+                      }}
+                    >
+                      Absent
+                    </Button>
+                    <IconButton aria-label="edit">
+                      <RiEdit2Fill style={{ fontSize: '25px', color: 'wheat' }} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={8} style={{ paddingBottom: 0, paddingTop: 0 }}>
+                    <Collapse in={expandedRows.includes(item.id)} timeout="auto" unmountOnExit>
+                      <div
+                        style={{
+                          backgroundColor: '#2a303d',
+                          padding: '10px',
+                          borderRadius: '10px',
+                          margin: '10px 0',
+                        }}
+                      >
+                        <Typography variant="body2" style={{ color: 'wheat' }}>
+                          {item.description}
+                        </Typography>
+                      </div>
+                    </Collapse>
+                  </TableCell>
+                </TableRow>
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {/* Modal for zoomed image */}
       <Dialog
@@ -225,9 +252,9 @@ const Accordion = () => {
         onClose={handleClose}
         PaperProps={{
           style: {
-            overflow: 'hidden', // Prevent scroll
-            borderRadius: '50%', // Ensure dialog itself is round
-            maxWidth: 'none', // No fixed size for dialog
+            overflow: 'hidden',
+            borderRadius: '50%',
+            maxWidth: 'none',
           },
         }}
       >
@@ -237,9 +264,9 @@ const Accordion = () => {
               src={selectedImage}
               alt="Zoomed"
               style={{
-                width: '400px', // Set width for zoomed image
-                height: '400px', // Set height for zoomed image
-                borderRadius: '50%', // Make the image round
+                width: '500px',
+                height: '500px',
+                borderRadius: '50%',
               }}
             />
           )}
@@ -249,4 +276,4 @@ const Accordion = () => {
   )
 }
 
-export default Accordion
+export default AccordionTable
