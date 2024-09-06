@@ -1,34 +1,39 @@
-/* eslint-disable prettier/prettier */
-// src/GoogleMapComponent.js
+import React, { useEffect, useRef } from 'react'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-import React from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
+// Import marker icons for Leaflet
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
-const containerStyle = {
-  width: '100%',
-  height: '400px',
-  borderRadius: '10px', // Add this line to set the border radius
-  overflow: 'hidden', // Add this line to ensure the map content doesn't overflow
-}
-
-const center = {
-  lat: 21.1285453, // Latitude for San Francisco
-  lng: 79.1036561, // Longitude for San Francisco
-}
-
-const apiKey = 'AIzaSyAvHHoPKPwRFui0undeEUrz00-8w6qFtik'
-
-const GoogleMapComponent = () => {
+// Fix Leaflet's default marker icon in Webpack
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+});
+const MainChart = () => {
   return (
-    <LoadScript
-      googleMapsApiKey={apiKey}
-      loadingElement={<div>Loading...</div>} // Optional: add a loading element
+    <>
+      <MapContainer
+      center={[21.1458, 79.0882]}
+      zoom={13}
+      style={{ height: '500px', width: '100%' }}
     >
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={15}>
-        <Marker position={center} />
-      </GoogleMap>
-    </LoadScript>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution="&copy; RocketSales, HB Gadget Solutions Nagpur"
+      />
+      <Marker position={[51.505, -0.09]}>
+        <Popup>
+          A pretty marker.<br /> Easily customizable.
+        </Popup>
+      </Marker>
+    </MapContainer>
+    </>
   )
 }
 
-export default GoogleMapComponent
+export default MainChart
