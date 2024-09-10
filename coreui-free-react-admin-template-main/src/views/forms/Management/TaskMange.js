@@ -12,14 +12,14 @@ import {
   DialogContent,
   Typography,
 } from '@mui/material'
+import { RiEdit2Fill } from 'react-icons/ri'
+import { AiFillDelete } from 'react-icons/ai'
 import girl1 from './Images/girl-1.jpg'
 import girls3 from './Images/girls-3.jpg'
 import girls5 from './Images/girls-5.jpg'
 import mens1 from './Images/mens-1.jpg'
 import mens2 from './Images/mens-2.jpg'
 import mens4 from './Images/mens-4.jpg'
-import { RiEdit2Fill } from 'react-icons/ri'
-import { AiFillDelete } from 'react-icons/ai'
 
 // Updated data with task details
 const data = [
@@ -113,9 +113,9 @@ const DataTable = () => {
       case 'Complete':
         return 'green'
       case 'In Process':
-        return '#fc9c39 '
+        return '#fc9c39'
       case 'Pending':
-        return '#ff1a1a '
+        return '#ff1a1a'
       default:
         return 'gray'
     }
@@ -126,40 +126,41 @@ const DataTable = () => {
       <Typography variant="h6" gutterBottom>
         Task Management Table
       </Typography>
-      <TableContainer component={Paper} style={{ backgroundColor: '#a5a7aa' }}>
-        {' '}
-        {/* Table background color */}
+      <TableContainer
+        component={Paper}
+        style={{ backgroundColor: '#212631', borderRadius: '10px' }}
+      >
         <Table>
-          <TableHead>
+          <TableHead style={{ backgroundColor: '#2a303d' }}>
             <TableRow>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Image
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 ID
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Name
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Mobile No
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Task Name
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Location
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Completion Date
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Deadline
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Last Status
               </TableCell>
-              <TableCell align="center" style={{ fontWeight: 'bold' }}>
+              <TableCell align="center" style={{ fontWeight: 'bold', color: 'wheat' }}>
                 Actions
               </TableCell>
             </TableRow>
@@ -180,13 +181,27 @@ const DataTable = () => {
                     onClick={() => handleImageClick(item.image)}
                   />
                 </TableCell>
-                <TableCell align="center">{item.id}</TableCell>
-                <TableCell align="center">{item.name}</TableCell>
-                <TableCell align="center">{item.mobile}</TableCell>
-                <TableCell align="center">{item.taskName}</TableCell>
-                <TableCell align="center">{item.location}</TableCell>
-                <TableCell align="center">{item.completionDate}</TableCell>
-                <TableCell align="center">{item.deadline}</TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.id}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.name}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.mobile}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.taskName}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.location}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.completionDate}
+                </TableCell>
+                <TableCell align="center" style={{ color: 'wheat' }}>
+                  {item.deadline}
+                </TableCell>
                 <TableCell align="center">
                   <Typography
                     style={{
@@ -201,12 +216,14 @@ const DataTable = () => {
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton aria-label="edit">
-                    <RiEdit2Fill style={{ fontSize: '25px' }} />
-                  </IconButton>
-                  <IconButton aria-label="delete">
-                    <AiFillDelete style={{ fontSize: '25px' }} />
-                  </IconButton>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                    <IconButton aria-label="edit">
+                      <RiEdit2Fill style={{ fontSize: '25px', color: 'wheat' }} />
+                    </IconButton>
+                    <IconButton aria-label="delete">
+                      <AiFillDelete style={{ fontSize: '25px', color: 'wheat' }} />
+                    </IconButton>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
